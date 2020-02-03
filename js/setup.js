@@ -11,7 +11,7 @@ var getRandomInt = function (max) {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
-// Получить случайное число из массива
+// Получить случайный элемент массива из массива
 var getRandomArrayValue = function (array) {
   var maxIndex = array.length - 1;
   var randomIndex = getRandomInt(maxIndex);
@@ -49,29 +49,19 @@ var getWizardElement = function (wizard, teplateElement) {
   return wizardElement;
 };
 
-// Отображение списка похожих магов
-var showSimilarWizards = function (wizards) {
-  // Элемент списка похожих магов
-  var similarListElement = document.querySelector('.setup-similar-list');
-
-  // Шаблон мага
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template')
-    .content
-    .querySelector('.setup-similar-item');
-
-  // Создаем буферный фрагмент
-  var wizardsFragment = document.createDocumentFragment();
+// Получить массив элементов магов
+var getWizardsElements = function (wizards, wizardTemplate) {
+  var wizardTemplates = [];
 
   for (var i = 0; i < wizards.length; i++) {
     var wizard = wizards[i];
     // Создаем элемент мага
-    var wizardElement = getWizardElement(wizard, similarWizardTemplate);
+    var wizardElement = getWizardElement(wizard, wizardTemplate);
     // Записываем в буферный фрагмент
-    wizardsFragment.appendChild(wizardElement);
+    wizardTemplates.push(wizardElement);
   }
 
-  // Добавляем фрагмент магов в список
-  similarListElement.appendChild(wizardsFragment);
+  return wizardTemplates;
 };
 
 // Показать панель мага
@@ -80,10 +70,27 @@ var showWizardPanel = function () {
   var userDialog = document.querySelector('.setup');
   userDialog.classList.remove('hidden');
 
+  // Шаблон мага
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template')
+    .content
+    .querySelector('.setup-similar-item');
+  // Элемент списка похожих магов
+  var similarListElement = document.querySelector('.setup-similar-list');
+
   // Генерируем магов
   var wizards = getWizards(SIMILAR_WIZARD_COUNT);
-  // Отображаем похожих магов
-  showSimilarWizards(wizards);
+  // Получаем элементы похожих магов
+  var wizardsElements = getWizardsElements(wizards, similarWizardTemplate);
+
+  // Создаем буферный фрагмент
+  var wizardsFragment = document.createDocumentFragment();
+  // Наполняем буферный фрагмент элементами магов
+  for (var i = 0; i < wizardsElements.length; i++) {
+    wizardsFragment.appendChild(wizardsElements[i]);
+  }
+
+  // Добавляем фрагмент магов в список
+  similarListElement.appendChild(wizardsFragment);
 
   // Делаем видимой панель похожих магов
   var setupSimilarDiv = document.querySelector('.setup-similar');
