@@ -30,17 +30,6 @@ var setupCloseElementClickHandler = function () {
 var setupCloseElementKeydownHandler = function (evt) {
   if (evt.key === ENTER_KEY) {
     hideWizardPanel();
-    // Останавливаем всплытие события
-    evt.stopPropagation();
-  }
-};
-
-// Элемент редактирования имени мага
-var setupUserNameElement = document.querySelector('.setup-user-name');
-var setupUserNameElementKeydownHandler = function (evt) {
-  if (evt.key === ESC_KEY) {
-    // Останавливаем всплытие события
-    evt.stopPropagation();
   }
 };
 
@@ -74,7 +63,10 @@ var fireballElementClickHandler = function () {
 // Обработчик нажатия клавиши в панели настроек мага
 var wizardPanelKeyDownHandler = function (evt) {
   if (evt.key === ESC_KEY) {
-    hideWizardPanel();
+    // Если мы не в поле с именем мага
+    if (!evt.target.classList.contains('setup-user-name')) {
+      hideWizardPanel();
+    }
   }
 };
 
@@ -168,9 +160,6 @@ var showWizardPanel = function () {
   // Добавляем обработчик нажатия клавиши для элемента закрытия
   setupCloseElement.addEventListener('keydown', setupCloseElementKeydownHandler);
 
-  // Добавляем обработчик нажатия клавиши для элемента имени мага
-  setupUserNameElement.addEventListener('keydown', setupUserNameElementKeydownHandler);
-
   // Обработчик нажатия клавиши в документе
   document.addEventListener('keydown', wizardPanelKeyDownHandler);
 
@@ -190,9 +179,6 @@ var hideWizardPanel = function () {
   setupCloseElement.removeEventListener('click', setupCloseElementClickHandler);
   // Удаляем обработчик нажатия клавиши для элемента закрытия
   setupCloseElement.removeEventListener('keydown', setupCloseElementKeydownHandler);
-
-  // Удаляем обработчик нажатия клавиши для элемента имени мага
-  setupUserNameElement.removeEventListener('keydown', setupUserNameElementKeydownHandler);
 
   // Удаляем обработчик нажатия клавиши в документе
   document.removeEventListener('keydown', wizardPanelKeyDownHandler);
